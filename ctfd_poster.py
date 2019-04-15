@@ -17,6 +17,14 @@ tasks_dir:
 	task2:
 		info.json
 		[ file2.py ]
+
+info.json should contain:
+	Title
+	Category
+	Description
+	Value
+	[ Tags ]
+	[ Flag ]
 """)
 	exit(0)
 
@@ -61,8 +69,7 @@ example = {"Title": 'title',
 			"Hidden": True,
 			'Flag': 'rrrr'}
 
-# url_to_new = 'http://ctf:443/admin/chal/new'
-# cookie = "session=.eJwdj02LgzAURf_K8NYuorMTumgJFQt50qKV93aOSk1iUugHtSn9701ndS_3wIH7gm5w2kN-u9zHBPQAeZqAP_t-hPwFP3-QA7W0cH0KLE-iKtST6zKtWpy52Fky9N8prJ9o-l-u7QOdCirYRclmoQytCoPFrHyww5hNxnIzK7l1yqkU62lis9GVLFOWa0Ff3kaDZEeRUWgCF8e5KnaTkkfNZqvZNQLbvWBzMBh3MnbBYEV0r-CdwP06Xnzn4gGw537qPLw_e5VM4Q.D4yGFw.tF2ETKWJEJY6P7kAMyJcEsdSfqg"
+# url_to_new = 'http://ctf/admin/chal/new'
 
 def postChal(task):
 	data = {

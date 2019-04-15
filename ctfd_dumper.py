@@ -8,7 +8,7 @@ import sys
 if not (3 <= len(sys.argv) <= 5):
 	print(
 f"""~~ CTFd dumper srcipt ~~
-usage: {sys.argv[0]} url cookie [link to chals jsons (default: chals/)] [chals ids (default: 1-300)] [n of threads]
+usage: {sys.argv[0]} url cookie [link to chals jsons (default: chals/)] [chals ids (default: 1-300)] [n of threads (default: 4)]
 results will be in ./task_name direcrory:
 
 example_task
@@ -70,7 +70,8 @@ def getTask(url):
 			"Description": data['description'],
 			"Files": data['files'],
 			"Tags": data['tags'],
-			"Value": data['value']}
+			"Value": data['value']
+	}
 
 	print(f"[^] Title: { task['Title'] }, Category: { task['Category'] }, Value: { task['Value'] }")
 	makedirs(f'{task["Title"]}')
