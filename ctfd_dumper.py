@@ -21,6 +21,8 @@ example_task
 
 args = sys.argv
 
+
+# help me
 if len(args) == 3:
 	args.append('chals/')
 
