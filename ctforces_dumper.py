@@ -6,7 +6,7 @@ import sys
 if not (3 <= len(sys.argv) <= 6):
 	print(
 f"""~~ ctforces dumper srcipt ~~
-usage: {sys.argv[0]} cookie link_to_contest [chals ids (default: 1-30)] [n of threads (default: 1)]
+usage: {sys.argv[0]} cookie link_to_contest(api) [chals ids (default: 1-30)] [n of threads (default: 1)]
 results will be in ./task_name direcrory:
 
 example_task
@@ -45,15 +45,21 @@ def getTask(url):
 		base = '/'.join(url.split('/')[:3])+'/'
 
 		# print(url)
-		tx = req.get(url, headers={"Cookie":cookie} ).text
+		tx = req.get(url, headers={"Cookie":cookie})
+
+		# from requests_toolbelt.utils import dump
+		# print(dump.dump_all(tx).decode())
+		tx = tx.text
 
 		data = json.loads(tx)
+		# print(tx)
 
 		task = {"Title": data['name'],
 				"Category": data['tags_details'][0]['name'],
 				"Description": data['description'] + f"\n\n(from ctforces, author: { data['author_username'] })",
-				# "Files": data['files'],
+				"Files": list(),
 				# "Tags": data['tags'],
+				"Solved": data["is_solved_by_user"],
 				"Value": data['contest_cost']
 		}
 
@@ -65,17 +71,21 @@ def getTask(url):
 		print(f"[^] Title: { task['Title'] }, Category: { task['Category'] }, Value: { task['Value'] }")
 		makedirs(f'{task["Title"]}')
 
-		with open(f'./{task["Title"]}/info.json', 'w') as f:
-			f.write(json.dumps(task))
-
 		for i in data['files_details']:
 			link = base + 'media/' + i['file_field']
 			# print(link)
+			task['Files'].append(i['name'])
 
 			f = req.get(link, headers={'Cookie': cookie}).content
 			with open(f'./{ task["Title"] }/{ i["name"] }', 'wb') as file:
 				file.write(f)
-	except Exception:
+
+
+		with open(f'./{task["Title"]}/info.json', 'w') as f:
+			f.write(json.dumps(task))
+
+	except Exception as e:
+		# print(e)
 		pass
 		# print('No such task(')
 
@@ -88,6 +98,6 @@ from multiprocessing import Pool
 workers = Pool(threads)
 
 print(url)
-urls = [url+f'tasks/{i}' for i in range(*ids)]
+urls = [url+f'tasks/{i}/' for i in range(*ids)]
 
 workers.map(getTask, urls)
