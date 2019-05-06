@@ -5,10 +5,12 @@ import sys
 
 
 
-if not (3 <= len(sys.argv) <= 5):
+if '-h' in sys.argv:
 	print(
 f"""~~ CTFd dumper srcipt ~~
-usage: {sys.argv[0]} url cookie [link to chals jsons (default: chals/)] [chals ids (default: 1-300)] [n of threads (default: 4)]
+firstly, copy request to task json to /tmp/request
+
+usage: {sys.argv[0]} [chals ids (default: 1-300)] [http? (default: True)] [n of threads (default: 1)]
 results will be in ./task_name direcrory:
 
 example_task
@@ -19,41 +21,41 @@ example_task
 """)
 	exit(0)
 
-args = sys.argv
+args = sys.argv[1::]
 
 
 # help me
-if len(args) == 3:
-	args.append('chals/')
+if len(args) == 0:
+	args.append('1-300')
 
-if len(args) == 4:
-	args.append("1-300")
+if len(args) == 1:
+	args.append("True")
 
-if len(args) == 5:
-	args.append("4")
+if len(args) == 2:
+	args.append("1")
 
-if args[1][-1] != '/':
-	args[1] += '/'
+# base = args[1] # 'https://olymp.ruc.tf/' 
+# cookie = args[2] # "session=3d4ba3a7-c31e-smth-9e0d5ec" 
+# chals = args[3]
+http = (True if args[1].lower() != 'false' else False)
+Range = map(int, args[0].split('-'))
+NofWorkers = int(args[2])
 
-if args[3][-1] != '/':
-	args[3] += '/'
+from utils import parse_request
+url, HEADERS = parse_request(http)
+url = url.split('/')[:-1]
+base = '/'.join(url[:-1])+'/'
+chals = '/'.join(url[-1:])+'/'
 
-if args[1][:4] != 'http':
-	args[1] = f'http://{args[1]}'
 
-
-base = args[1] # 'https://olymp.ruc.tf/' 
-cookie = args[2] # "session=3d4ba3a7-c31e-smth-9e0d5ec" 
-chals = args[3]
-Range = map(int, args[4].split('-'))
-NofWorkers = int(args[5])
+# print(url, base, chals)
 
 from multiprocessing import Pool
 from os import makedirs
 import json
 
 def getTask(url):
-	j = req.get(url, headers={'Cookie': cookie})
+	j = req.get(url, headers=HEADERS)
 
 	if not j.ok:
 		# print('Error')
@@ -62,8 +64,9 @@ def getTask(url):
 	print(f"[+] Got task with id { url.split('/')[-1] }")
 	# print(j.text)
 
-	data = json.loads(j.text)['data']
-	# print(data)
+	pre = json.loads(j.text)#['data'] # ?????? 
+	
+	data = (pre['data'] if 'data' in pre else pre)
 
 	task = {"Title": data['name'],
 			"Category": data['category'],
@@ -74,17 +77,19 @@ def getTask(url):
 	}
 
 	print(f"[^] Title: { task['Title'] }, Category: { task['Category'] }, Value: { task['Value'] }")
-	makedirs(f'{task["Title"]}')
+	try:
+		makedirs(f'{task["Title"]}')
 
-	# to be removed (maybe)
-	with open(f'./{task["Title"]}/info.json', 'w') as f:
-		f.write(json.dumps(task))
+		with open(f'./{task["Title"]}/info.json', 'w') as f:
+			f.write(json.dumps(task))
 
-	for i in task['Files']:
-		print(base+'files/'+i)
-		f = req.get(base+'files/'+i, headers={'Cookie': cookie}).content
-		with open(f'./{ task["Title"] }/{ i.split("/")[-1] }', 'wb') as file:
-			file.write(f)
+		for i in task['Files']:
+			# print(base+'files/'+i)
+			f = req.get(base+'files/'+i, headers=HEADERS).content
+			with open(f'./{ task["Title"] }/{ i.split("/")[-1] }', 'wb') as file:
+				file.write(f)
+	except FileExistsError as e:
+		print('Task is already downloaded')
 
 
 workers = Pool(NofWorkers)

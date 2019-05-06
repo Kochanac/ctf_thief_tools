@@ -3,10 +3,12 @@
 import requests as req
 import sys
 
-if not (3 <= len(sys.argv) <= 6):
+if '-h' in sys.argv:
 	print(
 f"""~~ ctforces dumper srcipt ~~
-usage: {sys.argv[0]} cookie link_to_contest(api) [chals ids (default: 1-30)] [n of threads (default: 1)]
+firstly, copy request to task to /tmp/request
+
+usage: {sys.argv[0]} [chals ids (default: 1-40)] [ http? default: False ] [n of threads (default: 1)] [debug: false if isn't set]
 results will be in ./task_name direcrory:
 
 example_task
@@ -20,22 +22,31 @@ example_task
 args = sys.argv[1::]
 
 # help me
+if len(args) == 0:
+	args.append('1-40')
+
+if len(args) == 1:
+	args.append('False')
 
 if len(args) == 2:
-	args.append('1-30')
-
-if len(args) == 3:
 	args.append('1')
 
-cookie = args[0]
-contest = args[1] + ( '/' if args[1][-1] != '/'  else '')
+if len(args) == 3:
+	debug = False
+else:
+	debug = True
 
-url = args[1] + ( '/' if args[1][-1] != '/' else '' )
-url = ('http://' + url) if url[:4] != 'http' else url
+http = True if args[1].lower() == "true" else False
 
-ids = map(int, args[2].split('-'))
-threads = int(args[3])
+ids = map(int, args[0].split('-'))
+threads = int(args[2])
 
+# Now we need to parse request
+
+from utils import parse_request
+url, HEADERS = parse_request(http)
+url = '/'.join(url.split('/')[:-3])+'/'
+print(url)
 
 import json
 from os import makedirs
@@ -43,16 +54,18 @@ from os import makedirs
 def getTask(url):
 	try:
 		base = '/'.join(url.split('/')[:3])+'/'
-
-		# print(url)
-		tx = req.get(url, headers={"Cookie":cookie})
+		if debug:
+			print(url)
+		tx = req.get(url, headers=HEADERS)
 
 		# from requests_toolbelt.utils import dump
 		# print(dump.dump_all(tx).decode())
 		tx = tx.text
-
+		
+		if debug:
+			print(tx)
 		data = json.loads(tx)
-		# print(tx)
+		
 
 		task = {"Title": data['name'],
 				"Category": data['tags_details'][0]['name'],
@@ -68,7 +81,7 @@ def getTask(url):
 			task['Tags'].append(i['name'])
 		
 
-		print(f"[^] Title: { task['Title'] }, Category: { task['Category'] }, Value: { task['Value'] }")
+		print(f"[+] Title: { task['Title'] }, Category: { task['Category'] }, Value: { task['Value'] }")
 		makedirs(f'{task["Title"]}')
 
 		for i in data['files_details']:
@@ -76,7 +89,7 @@ def getTask(url):
 			# print(link)
 			task['Files'].append(i['name'])
 
-			f = req.get(link, headers={'Cookie': cookie}).content
+			f = req.get(link, headers=HEADERS).content
 			with open(f'./{ task["Title"] }/{ i["name"] }', 'wb') as file:
 				file.write(f)
 
@@ -85,9 +98,13 @@ def getTask(url):
 			f.write(json.dumps(task))
 
 	except Exception as e:
-		# print(e)
+		if 'detail' in data and data['detail'] == 'No such task.':
+			print(url + ' no such task')
+
+		if debug:
+			raise e
+
 		pass
-		# print('No such task(')
 
 
 # csrf = 'X-CSRFToken: q7kopZ1YzUnvDR1tckI3ktnJ2yeRzv1ziepcOJYkLASBWhrOKePestuFVVkTxZPl'.split(' ')[1]

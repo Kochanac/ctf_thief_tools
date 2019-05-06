@@ -7,7 +7,7 @@ from utils import *
 form = "{name} - {category} {value} {solved}"
 
 if '-h' in sys.argv or '--help' in sys.argv:
-	print(f"""Usage: { sys.argv[0] } [tag]""")
+	print(f"""Usage: { sys.argv[0] } [ tag ]""")
 	exit(0)
 
 args = sys.argv[1::]
@@ -19,7 +19,6 @@ tag = args[0]
 tasks = os.listdir()
 for i in sorted(tasks):
 	try:
-
 		if not os.path.isdir(f'./{i}'):
 			continue
 		if 'info.json' not in os.listdir(f'./{i}'):

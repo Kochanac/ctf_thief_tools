@@ -59,3 +59,22 @@ def process_title(data, ls=False):
 
 def process_desc(text):
 	return text
+
+
+def parse_request(http):
+	# Now we need to parse request
+	txt = open('/tmp/request', 'r').readlines()
+
+	headers = dict()
+	for i in txt[1::]:
+		hdr = i.replace('\n', '').split(': ')
+		if len(hdr) > 2:
+			print(i, i.split(': '))
+			raise TypeError('invalid request headers')
+
+		headers[hdr[0]] = hdr[1]
+
+	headers['Accept-Encoding'] = 'json'
+	url = ('https://' if not http else 'http://') + headers['Host'] + txt[0].split(' ')[1]
+
+	return url, headers
