@@ -6,7 +6,7 @@ category_to_color = {
 	'rev': 'yellow',
 	'for': 'cyan',
 	'joy': 'red',
-	'web': 'grey'
+	'web': 'blue'
 }
 
 def value_to_color(val):
@@ -64,6 +64,8 @@ def process_desc(text):
 def parse_request(http):
 	# Now we need to parse request
 	txt = open('/tmp/request', 'r').readlines()
+
+	# http = (True if 'HTTPS/' not in txt[0] else False)
 
 	headers = dict()
 	for i in txt[1::]:
