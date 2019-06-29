@@ -10,7 +10,7 @@ if '-h' in sys.argv:
 f"""~~ universal ctf dumper srcipt ~~
 firstly, copy request to task json to /tmp/request
 
-usage: {sys.argv[0]} board_name [range default: 1-300] [http? default: true]
+usage: {sys.argv[0]} board_name [range default: 1-300] [http? default depends on board]
 results will be in ./task_name direcrory:
 
 example_task
@@ -26,17 +26,21 @@ if len(args) < 2:
 	args.append('1-300')
 
 if len(args) < 3:
-	args.append('false')
+	args.append('from board')
 
 
 # print(args)
 board_name = args[0]
 Range = list(map(int, args[1].split('-')))
 Range[1] += 1 
-http = (True if args[2].lower() != 'false' else False)
 
 board = __import__(f'board_configs.{ board_name }', fromlist=('lol'))
 board_info = board.getInfo()
+
+if http == 'from board':
+	http = board_info['http?']
+else:
+	http = (True if args[2].lower() != 'false' else False)
 
 
 from utils import parse_request

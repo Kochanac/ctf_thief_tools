@@ -3,7 +3,8 @@ import json
 def getInfo():
 	return {
 		"task_id_in_url": -2,
-		"url_to_files": "media/{filename}"
+		"url_to_files": "media/{filename}",
+		"http?": False
 	}
 
 def parse_task(data):
