@@ -9,6 +9,12 @@ def getInfo():
 
 def parse_task(data):
 	data = json.loads(data)
+
+	if "data" in data:
+		data = data["data"]
+
+	data["files"] = [f[:f.find("?")] for f in data["files"]]
+
 	return {
 		"Title": data['name'],
 		"Category": data['category'],

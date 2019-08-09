@@ -3,7 +3,7 @@
 import requests as req
 import sys
 
-
+DEBUG = False
 
 if '-h' in sys.argv:
 	print(
@@ -36,6 +36,7 @@ Range[1] += 1
 
 board = __import__(f'board_configs.{ board_name }', fromlist=('lol'))
 board_info = board.getInfo()
+http = (True if args[2].lower() != 'false' else False)
 
 if http == 'from board':
 	http = board_info['http?']
@@ -67,7 +68,7 @@ def getTask(url):
 	j = req.get(url, headers=HEADERS)
 
 	if not j.ok:
-		print('Error')
+		if DEBUG: print('Error')
 		return None
 
 	print(f"[+] Got task with id { url.split('/')[board_info['task_id_in_url']] }")
