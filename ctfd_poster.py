@@ -1,12 +1,14 @@
 #!/usr/bin/python3
 
+
 import requests as req
 import sys
 
 args = sys.argv
 if not (3 <= len(args) <= 8):
 	print(
-f""" ~~~~~ CTFd poster script ~~~~~
+f"""~~~~~ CTFd poster script ~~~~~
+~~~ works only on old CTFd and not properly tested ~~~
 Usage: { args[0] } url cookie [value multipler] [hidden (default: False)] [category prefix] [direcrory with tasks (default: ./)] [number of threads]
 tasks directory should be in format:
 

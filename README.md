@@ -2,15 +2,13 @@
 
 ## Usage:
 
-copy request to one of tasks json (RMB -> "copy request headers" in firefox)
+copy request to one of tasks json (RMB -> "copy request headers" in firefox) and save it to /tmp/request
 
-save it to /tmp/request
+`dumper board_name 1-100` will dump tasks
 
-`dumper.py board_name 1-100` will dump tasks
+`cattask ./task1` 
 
-`cat_task.py ./task1` 
-
-`ls_tasks.py`
+`lstasks`
 
 ## supported boards:
 * ctfd
