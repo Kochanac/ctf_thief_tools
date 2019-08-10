@@ -12,6 +12,8 @@ copy request to one of tasks json (RMB -> "copy request headers" in firefox) and
 
 `lstasks`
 
+`setattr Solved True task1` - mark task1 as solved
+
 ## supported boards:
 * ctfd
 
