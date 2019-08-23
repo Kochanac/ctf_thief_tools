@@ -3,7 +3,7 @@ import json
 def getInfo():
 	return {
 		"task_id_in_url": -1,
-		"url_to_files": "files/{filename}",
+		"url_to_files": "{filename}",
 		"http?": True
 	}
 
@@ -13,7 +13,7 @@ def parse_task(data):
 	if "data" in data:
 		data = data["data"]
 
-	data["files"] = [f[:f.find("?")] for f in data["files"]]
+	# data["files"] = [f[:f.find("?")] for f in data["files"]]
 
 	return {
 		"Title": data['name'],
