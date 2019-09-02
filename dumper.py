@@ -55,7 +55,7 @@ chals[board_info["task_id_in_url"]] = "{id}"
 chals = '/'.join(chals)
 
 base = '/'.join(url[:3]) + '/'
-files = base[:-1]+ board_info["url_to_files"] # there should be {filename} in it
+files = base[:-1] + board_info["url_to_files"] # there should be {filename} in it
 
 # print(url, base, chals, files)
 

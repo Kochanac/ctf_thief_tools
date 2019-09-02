@@ -46,8 +46,11 @@ def process_solved(data):
 		return ''
 
 def process_category(data):
-	return clr( data["Category"]
-	           , category_to_color.get(data["Category"][:3], 'white') )
+	if data["Category"][:3].lower() in category_to_color:
+		return clr( data["Category"]
+	           , category_to_color[data["Category"][:3].lower()])
+	else:
+		return data["Category"]
 
 def process_title(data, ls=False):
 	if ls:
