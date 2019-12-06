@@ -42,7 +42,7 @@ def process_value(val):
 
 def process_solved(data):
 	if 'Solved' in data and data['Solved']:
-		return clr('[ SOLVED ]'
+		return clr('[ SOLVED ] '
 		           , 'green'
 		           , attrs = ['bold'])
 	else:

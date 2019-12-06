@@ -4,7 +4,7 @@ import sys, json, os
 from termcolor import colored as clr
 from utils import *
 
-form = "{name} - {category} {value} {solved} {files}"
+form = "{name} - {category} {value} {solved}{files}"
 
 if '-h' in sys.argv or '--help' in sys.argv:
 	print(f"""Usage: { sys.argv[0] } [ tag ]""")
