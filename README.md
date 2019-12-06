@@ -18,7 +18,7 @@ copy request to one of tasks json (RMB -> "copy request headers" in firefox) and
 
 `setattr Solved True task1` - mark task1 as solved
 
-## supported:
+## Supported:
 * ctfd
 
 * ctforces (ctforces.com)
