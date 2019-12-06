@@ -4,7 +4,7 @@ import sys, json, os
 from termcolor import colored as clr
 from utils import *
 
-form = "{name} - {category} {value} {solved}"
+form = "{name} - {category} {value} {solved} {files}"
 
 if '-h' in sys.argv or '--help' in sys.argv:
 	print(f"""Usage: { sys.argv[0] } [ tag ]""")
@@ -31,8 +31,9 @@ for i in sorted(tasks):
 			                  , category = process_category(task)
 			                  , value = process_value(task['Value']) 
 			                  , solved = process_solved(task)
+			                  , files = red("[ FILES ]") if len(os.listdir(f'./{i}')) != len(task["Files"])+1 else ''
 			                  )
-			) 
+			)
 
 	except PermissionError:
 		pass

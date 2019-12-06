@@ -9,6 +9,9 @@ category_to_color = {
 	'web': 'blue'
 }
 
+def red(text):
+	return clr(text, "red")
+
 def value_to_color(val):
 	val = int(val)
 	if val < 100:
@@ -60,9 +63,9 @@ def process_title(data, ls=False):
 		           , value_to_color(data['Value'])
 		           , attrs=['bold'])
 
+
 def process_desc(text):
 	return text
-
 
 def parse_request(http):
 	# Now we need to parse request
