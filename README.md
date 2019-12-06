@@ -8,7 +8,7 @@ copy request to one of tasks json (RMB -> "copy request headers" in firefox) and
 
 `dumper ctfd 1-100` in empty directory will dump tasks
 
-`cattask ./task1` 
+`cattask ./task1`
 
 `lstasks`
 

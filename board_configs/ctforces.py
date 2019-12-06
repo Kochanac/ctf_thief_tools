@@ -27,3 +27,6 @@ def parse_task(data):
 		task['Files'].append(i['file_field'])
 
 	return task
+
+def get_meta(base, HEADERS):
+	return {}
