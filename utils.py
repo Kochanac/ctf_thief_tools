@@ -83,6 +83,7 @@ def parse_request(http):
 		headers[hdr[0]] = hdr[1]
 
 	headers['Accept-Encoding'] = 'json'
+	headers['If-Modified-Since'] = '0'
 	url = ('https://' if not http else 'http://') + headers['Host'] + txt[0].split(' ')[1]
 
 	return url, headers

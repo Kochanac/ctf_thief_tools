@@ -31,7 +31,7 @@ for i in sorted(tasks):
 			                  , category = process_category(task)
 			                  , value = process_value(task['Value']) 
 			                  , solved = process_solved(task)
-			                  , files = red("[ FILES ]") if len(os.listdir(f'./{i}')) != len(task["Files"])+1 else ''
+			                  , files = red("[ FILES ]") if len(os.listdir(f'./{i}')) > len(task["Files"])+1 else ''
 			                  )
 			)
 

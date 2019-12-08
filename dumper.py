@@ -42,10 +42,10 @@ if len(listdir("./")) != 0:
 		exit(0)
 
 
-def getTask(url):
+def getTask(url, task_id):
 	global files
 
-	task_id = url.split('/')[board_info['task_id_in_url']]
+	# task_id = url.split('/')[board_info['task_id_in_url']]
 
 	j = req.get(url, headers=HEADERS)
 
@@ -53,11 +53,11 @@ def getTask(url):
 		print('Now at id', url.split('/')[board_info['task_id_in_url']], end="\r")
 		return None
 
-	print(f"[+] Got task with id { url.split('/')[board_info['task_id_in_url']] }")
+	print(f"[+] Got task with id { task_id }")
 
 	# print(j.text)
 
-	task = board.parse_task(j.text)
+	task = board.parse_task(j.text, id=task_id)
 	task["id"] = task_id
 
 	print(f"[^] Title: { task['Title'] }, Category: { process_category(task) }, Value: { process_value(task['Value']) }")
@@ -113,7 +113,10 @@ if __name__ == '__main__':
 	# /tmp/request parsed
 
 	chals = url
-	chals[board_info["task_id_in_url"]] = "{id}"
+
+	if board_info["task_id_in_url"] != None:
+		chals[board_info["task_id_in_url"]] = "{id}"
+
 	chals = '/'.join(chals)
 
 	base = '/'.join(url[:3]) + '/'
@@ -121,11 +124,10 @@ if __name__ == '__main__':
 
 	if DEBUG: print(url, base, chals, files)
 
-	
-	urls = (chals.format(id=str(i)) for i in range(*Range))
+	urls = ((chals.format(id=str(i)), i) for i in range(*Range))
 
-	for url in urls:
-		getTask(url)
+	for url, task_id in urls:
+		getTask(url, task_id)
 
 	print("getting metadata")
 	meta = dict( board.get_meta(base, HEADERS) )

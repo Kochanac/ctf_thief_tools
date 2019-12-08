@@ -7,7 +7,7 @@ def getInfo():
 		"http?": False
 	}
 
-def parse_task(data):
+def parse_task(data, **kwargs):
 	data = json.loads(data)
 
 	if "data" in data:
