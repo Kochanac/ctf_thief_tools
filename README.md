@@ -10,7 +10,7 @@ copy request to one of tasks json (RMB -> "copy request headers" in firefox) and
 
 `install.sh` will link scripts to /usr/local/sbin
 
-`dumper ctfd 1-100` in empty directory will dump tasks
+`dumper ctfd 1-100` will dump/update tasks
 
 `cattask ./task1`
 
