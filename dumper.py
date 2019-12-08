@@ -16,7 +16,7 @@ if '-h' in sys.argv:
 f"""~~ universal ctf dumper srcipt ~~
 firstly, copy request to task json to /tmp/request
 
-usage: {sys.argv[0]} board_name [range default: 1-200] [http? default depends on board]
+usage: {sys.argv[0]} board_name [range default: 0-200] [http? default depends on board]
 results will be in ./task_name direcrory:
 
 example_task
@@ -29,7 +29,7 @@ example_task
 args = sys.argv[1::]
 
 if len(args) < 2:
-	args.append('1-200')
+	args.append('0-200')
 
 if len(args) < 3:
 	args.append('from board')
