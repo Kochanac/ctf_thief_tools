@@ -26,10 +26,11 @@ def parse_task(data, **kwargs):
 	tasktag = etree.HTML(data).xpath('//table[@id="flagtable"]')[0]
 
 	author = tasktag.xpath('.//span[@class="author"]/text()')[0]
+	
 	task = {
 		"Title": tasktag.xpath('.//span[@class="desc"]/text()')[0],
 		"Category": tasktag.xpath('.//span[@class="cat"]/text()')[0],
-		"Description": '\n\n'.join(tasktag.xpath('.//div[@class="fullDesc"]//text()')) + f"\n\n(from forkbomb, { author })",
+		"Description": etree.tostring(tasktag.xpath('.//div[@class="fullDesc"]')[0]).decode() + f"\n\n(from forkbomb, { author })",
 		"Files": list(),
 		"Color": tasktag.xpath('//div[contains(@class,"fullTile")]/@style')[0].split(" ")[-1],
 		"Solved": len(tasktag.xpath('//div[@class="fullTile solved"]')) == 1,
