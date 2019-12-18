@@ -45,8 +45,6 @@ if len(listdir("./")) != 0:
 def getTask(url, task_id):
 	global files
 
-	# task_id = url.split('/')[board_info['task_id_in_url']]
-
 	j = req.get(url, headers=HEADERS)
 
 	if not j.ok:
@@ -124,7 +122,12 @@ if __name__ == '__main__':
 
 	if DEBUG: print(url, base, chals, files)
 
-	urls = ((chals.format(id=str(i)), i) for i in range(*Range))
+	if not board_info["custom_ids"]:
+		ids = range(*Range)
+	else:
+		ids = board.get_ids(chals)
+
+	urls = ((chals.format(id=str(Id)), Id) for Id in ids)
 
 	for url, task_id in urls:
 		getTask(url, task_id)

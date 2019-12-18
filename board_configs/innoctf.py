@@ -5,7 +5,8 @@ def getInfo():
 	return {
 		"task_id_in_url": None,
 		"url_to_files": "/{filename}",
-		"http?": False
+		"http?": False,
+		"custom_ids": False
 	}
 
 def parse_task(data, **kwargs):
