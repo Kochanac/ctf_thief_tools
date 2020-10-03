@@ -26,3 +26,6 @@ copy request to one of tasks json (RMB -> "copy request headers" in firefox) and
 * innoctf
 
 * forkbomb (forkbomb.ru)
+
+* m_star_ctf (mctf.online)
+
