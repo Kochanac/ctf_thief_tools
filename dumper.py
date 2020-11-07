@@ -37,7 +37,7 @@ if len(args) < 3:
 
 if len(listdir("./")) != 0:
 	print("This directory is not empty")
-	act = input("Do you really want to continue? [y/N]")
+	act = input("Do you really want to continue? [y/N] ")
 	if act != 'y':
 		exit(0)
 

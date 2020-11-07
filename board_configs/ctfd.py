@@ -14,7 +14,7 @@ def parse_task(data, **kwargs):
 	if "data" in data:
 		data = data["data"]
 
-	# data["files"] = [f[:f.find("?")] for f in data["files"]]
+	data["files"] = [f[:f.find("?")] for f in data["files"]]
 
 	return {
 		"Title": data['name'],
@@ -27,11 +27,23 @@ def parse_task(data, **kwargs):
 
 def get_meta(base, HEADERS):
 	import requests as req
-	solved = req.get(base + "solves", headers=HEADERS).json()["solves"]
+	
+	solved = req.get(base + "api/v1/teams/me/solves", headers=HEADERS)
+	if solved.status_code != 200:
+		print("Can't get metadata. You can send me url which is smth like http://host/api/v1/smth/solves or just ignore it")
+		url = input("URL (or nothing): ")
+		solved = req.get(base + "api/v1/teams/me/solves", headers=HEADERS)
 
-	data = {}
-	for i in solved:
-		data[str(i["chalid"])] = dict()
-		data[str(i["chalid"])]["Solved"] = True
+	try:
+		solved = solved.json()["data"]
+
+		data = {}
+		for i in solved:
+			data[int(i["challenge_id"])] = dict()
+			data[int(i["challenge_id"])]["Solved"] = True
+
+	except Exception as e:
+		print("Something went wrong with meta")
+		data = {}
 
 	return data
