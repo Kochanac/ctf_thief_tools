@@ -32,7 +32,7 @@ def get_meta(base, HEADERS):
 	if solved.status_code != 200:
 		print("Can't get metadata. You can send me url which is smth like http://host/api/v1/smth/solves or just ignore it")
 		url = input("URL (or nothing): ")
-		solved = req.get(base + "api/v1/teams/me/solves", headers=HEADERS)
+		solved = req.get(base + url, headers=HEADERS)
 
 	try:
 		solved = solved.json()["data"]
