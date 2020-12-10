@@ -14,7 +14,7 @@ def parse_task(data, **kwargs):
 	if "data" in data:
 		data = data["data"]
 
-	data["files"] = [f[:f.find("?")] for f in data["files"]]
+	data["files"] = [f[:f.find("?")] if '?' in f else f for f in data["files"] ]
 
 	return {
 		"Title": data['name'],
