@@ -18,7 +18,8 @@ def parse_task(data, **kwargs):
 
 	desc = data['description']
 	if "connection_info" in data:
-		desc += "\n" + data["connection_info"]
+		desc += "\nConnection info: "
+		desc += str(data["connection_info"])
 
 	return {
 		"Title": data['name'],
