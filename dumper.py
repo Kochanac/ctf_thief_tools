@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 
-import requests as req
-
 import json
 import sys
-from os import makedirs, path, listdir
+from os import listdir, makedirs, path
 
+import requests as req
 from utils import *
-
 
 DEBUG = False
 
@@ -16,7 +14,7 @@ if '-h' in sys.argv:
 f"""~~ universal ctf dumper srcipt ~~
 firstly, copy request to task json to /tmp/request
 
-usage: {sys.argv[0]} board_name [range default: 0-200] [http? default depends on board]
+usage: {sys.argv[0]} board_name [range default: 0-200] [http? default depends on board] [-om to get only metadata]
 results will be in ./task_name direcrory:
 
 example_task
@@ -33,6 +31,9 @@ if len(args) < 2:
 
 if len(args) < 3:
 	args.append('from board')
+
+if len(args) < 4:
+	args.append("False")
 
 
 if len(listdir("./")) != 0:
@@ -129,8 +130,9 @@ if __name__ == '__main__':
 
 	urls = ((chals.format(id=str(Id)), Id) for Id in ids)
 
-	for url, task_id in urls:
-		getTask(url, task_id)
+	if args[3] != "-om":
+		for url, task_id in urls:
+			getTask(url, task_id)
 
 	print("getting metadata")
 	meta = dict( board.get_meta(base, HEADERS) )
