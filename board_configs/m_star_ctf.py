@@ -13,8 +13,8 @@ def parse_task(data, **kwargs):
 	try:
 		data = json.loads(data)["data"][kwargs.get("id")]
 	except IndexError:
-		print("Fine.")
-		return {}
+		print("No task.")
+		return None
 
 	task = {
 		"Title": data['name'],

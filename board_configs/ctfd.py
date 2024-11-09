@@ -14,7 +14,10 @@ def parse_task(data, **kwargs):
 	if "data" in data:
 		data = data["data"]
 
-	data["files"] = [f[:f.find("?")] if '?' in f else f for f in data["files"] ]
+	data["files"] = [
+		{"name": f[:f.find("?")] if '?' in f else f, "url": f}
+		for f in data["files"] 
+	]
 
 	desc = data['description']
 	if "connection_info" in data:

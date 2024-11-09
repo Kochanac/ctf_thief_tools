@@ -8,6 +8,7 @@ import requests as req
 from utils import *
 
 DEBUG = False
+USE_HEADERS_FOR_FILES = False
 
 if '-h' in sys.argv:
 	print(
@@ -49,7 +50,8 @@ def getTask(url, task_id):
 	j = req.get(url, headers=HEADERS)
 
 	if not j.ok:
-		print('Now at id', url.split('/')[board_info['task_id_in_url']], end="\r")
+		print('Now at id', task_id, end="\r")
+		# print('Now at id', url.split('/')[board_info['task_id_in_url']], end="\r")
 		return None
 
 	print(f"[+] Got task with id { task_id }")
@@ -57,9 +59,15 @@ def getTask(url, task_id):
 	# print(j.text)
 
 	task = board.parse_task(j.text, id=task_id)
+	if task is None:
+		return None
+
 	task["id"] = task_id
 
-	print(f"[^] Title: { task['Title'] }, Category: { process_category(task) }, Value: { process_value(task['Value']) }")
+	try:
+		print(f"[^] Title: { task['Title'] }, Category: { process_category(task) }, Value: { process_value(task['Value']) }")
+	except KeyError:
+		print(f"wtf {task=}")
 	
 	if not path.exists(task['Title']):
 		makedirs(f'{task["Title"]}')
@@ -72,17 +80,35 @@ def getTask(url, task_id):
 		f.write(json.dumps(task))
 
 	for i in task['Files']:
-		f = req.get(files.format(filename=i), headers=HEADERS)
+		file_headers = HEADERS if USE_HEADERS_FOR_FILES else None
+
+		if isinstance(i, str):
+			name = i
+			url = i
+		if isinstance(i, dict):
+			name = i["name"]
+			url = i["url"]
+
+		f = req.get(files.format(filename=url), headers=file_headers)
 
 		while f.status_code != 200:
 			print('Looks like there is something wrong with files url format string')
+			print(f'{f.status_code=} {f.text=}')
+			print(f"{f.history[0].url}")
+			print(f"{f.url}")
 			print('You can type it yourself, filename will be placed under {filename}')
-			print(f'example filename: {i}')
-			files = base + input(f"{base}")
+			print('or type SKIP to skip')
+			print(f'example filename: {url}')
+			bs = base.strip("/")
+			files = bs + input(f"{bs}")
+			# if "SKIP" in files:
+				# break
+			
+			ff = files.format(filename=url)
+			print(f"getting {ff=}")
+			f = req.get(ff, headers=file_headers, allow_redirects=True)
 
-			f = req.get(files.format(filename=i), headers=HEADERS)
-
-		with open(f'./{ task["Title"] }/{ i.split("/")[-1] }', 'wb') as file:
+		with open(f'./{ task["Title"] }/{ name.split("/")[-1] }', 'wb') as file:
 			file.write(f.content)
 
 

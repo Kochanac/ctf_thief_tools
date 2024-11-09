@@ -26,6 +26,15 @@ else:
 	file = sys.argv[1]
 
 
+def fmt_file(x):
+	if isinstance(x, str):
+		return x
+	if isinstance(x, dict):
+		return x["name"]
+	
+	return x
+
+
 with open(file) as f:
 	data = json.loads(f.read())
 
@@ -34,7 +43,7 @@ with open(file) as f:
 	                  , category = process_category(data)
 	                  , value = process_value(data["Value"])
 	                  , text = process_desc(data["Description"])
-	                  , files = ('\n'.join(data['Files']) if 'Files' in data else 'No files')
+	                  , files = ('\n'.join([fmt_file(file) for file in data['Files'] ]) if 'Files' in data else 'No files')
 	                  ,	solved = process_solved(data)
 	                 )
 	)
